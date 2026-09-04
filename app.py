@@ -1,7 +1,10 @@
 import json
 import pymysql
 import os
+from dotenv import load_dotenv
 from flask import Flask, request
+
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -15,7 +18,7 @@ def home():
     try:
         conn = pymysql.connect(host=DB_HOST, user=DB_USER, password=DB_PASS, database=DB_NAME)
         conn.close()
-        return "<h1>API Legacy TechNova - Funcionando (Más o menos)</h1>"
+        return "<h1>API Legacy TechNova - Funcionando</h1>"
     except Exception as e:
         return f"<h1>Sistema Caído</h1><p>{e}</p>", 500
 
@@ -50,4 +53,4 @@ def health_check():
     return json.dumps(estado), status_code
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5050, debug=True)
+    app.run(host='0.0.0.0', port=int(os.getenv("PORT", "5050")), debug=os.getenv("DEBUG", "True"))

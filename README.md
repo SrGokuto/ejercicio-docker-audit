@@ -46,3 +46,43 @@ bandit -r . -x ./.venv/
 | High | 2 |
 
 **Archivos omitidos:** 0
+
+## Auditoría de seguridad con Bandit (segunda ejecución)
+
+- **Python:** 3.14.7
+- **Run started:** 2026-09-04 19:57:30.498564+00:00
+
+### Tabla de resultados
+
+| # | ID | Tipo | Severidad | Confianza | CWE | Archivo: Línea | Descripción |
+|---|----|------|-----------|-----------|-----|----------------|-------------|
+| 1 | B104 | hardcoded_bind_all_interfaces | Medium | Medium | CWE-605 | app.py:56 | Posible binding a todas las interfaces (`0.0.0.0`) |
+| 2 | B101 | assert_used | Low | High | CWE-703 | test_app.py:9 | Uso de `assert`; el código se elimina al compilar con bytecode optimizado |
+| 3 | B101 | assert_used | Low | High | CWE-703 | test_app.py:10 | Uso de `assert`; el código se elimina al compilar con bytecode optimizado |
+| 4 | B101 | assert_used | Low | High | CWE-703 | test_app.py:12 | Uso de `assert`; el código se elimina al compilar con bytecode optimizado |
+
+### Métricas
+
+- **Total líneas de código escaneadas:** 60
+- **Total líneas omitidas (#nosec):** 0
+- **Total issues omitidos por desactivación (#nosec BXXX):** 0
+
+**Total de problemas por severidad:**
+
+| Severidad | Cantidad |
+|-----------|----------|
+| Undefined | 0 |
+| Low | 3 |
+| Medium | 1 |
+| High | 0 |
+
+**Total de problemas por confianza:**
+
+| Confianza | Cantidad |
+|-----------|----------|
+| Undefined | 0 |
+| Low | 0 |
+| Medium | 1 |
+| High | 3 |
+
+**Archivos omitidos:** 0
