@@ -4,6 +4,8 @@ services:
     image: ${DOCKERHUB_USERNAME:-srgokuto}/ejercicio-docker-audit:latest
     container_name: tecnova-web
     restart: unless-stopped
+    networks:
+      - tecnova-net
     env_file:
       - .env
     environment:
@@ -19,6 +21,8 @@ services:
     image: mysql:8.4
     container_name: tecnova-db
     restart: unless-stopped
+    networks:
+      - tecnova-net
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASS}
       MYSQL_DATABASE: ${DB_NAME}
@@ -34,6 +38,8 @@ services:
     image: jc21/nginx-proxy-manager:latest
     container_name: tecnova-npm
     restart: unless-stopped
+    networks:
+      - tecnova-net
     ports:
       - "80:80"
       - "443:443"
@@ -46,3 +52,7 @@ volumes:
   db_data:
   npm_data:
   npm_letsencrypt:
+
+networks:
+  tecnova-net:
+    driver: bridge
