@@ -1,5 +1,13 @@
 # Ejercicio Docker Audit
 
+## Links de acceso
+
+### [Nginx Proxy Manager](http://adminnpm-inferna.duckdns.org/)
+### [API Flask](http://api-inferna.duckdns.org/)
+### [Dozzle](http://dozzle-inferna.duckdns.org/)
+### [Uptime Kuma](http://kuma-inferna.duckdns.org/)
+
+
 ## Auditoría de seguridad con Bandit
 
 Ejecución:
