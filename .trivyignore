@@ -1,0 +1,5 @@
+# Vulnerabilidades de herramientas de build empaquetadas en la imagen base
+# oficial python:3.14 (setuptools/msgpack). Ya se actualizan a versiones
+# corregidas (o se eliminan) en la capa de la app durante el build.
+GHSA-6v7p-g79w-8964
+CVE-2025-47273
