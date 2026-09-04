@@ -15,12 +15,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Login to GHCR
+      - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push image
         uses: docker/build-push-action@v6
@@ -28,8 +27,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:latest
-            ghcr.io/${{ github.repository }}:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/ejercicio-docker-audit:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/ejercicio-docker-audit:${{ github.sha }}
 
       - name: Copy compose file to server
         uses: appleboy/scp-action@v0.1.7
@@ -43,16 +42,18 @@ jobs:
 
       - name: Deploy
         uses: appleboy/ssh-action@v1.2.2
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT || '22' }}
+          envs: DOCKERHUB_USERNAME,DOCKERHUB_TOKEN
           script: |
             cd /app/ejercicio-docker-audit
-            if [ -n "${{ secrets.GHCR_TOKEN }}" ]; then
-              echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            fi
-            docker compose pull web
-            docker compose up -d --no-build --force-recreate web
+            echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            DOCKERHUB_USERNAME="$DOCKERHUB_USERNAME" docker compose pull web
+            DOCKERHUB_USERNAME="$DOCKERHUB_USERNAME" docker compose up -d --no-build --force-recreate web
             docker image prune -f

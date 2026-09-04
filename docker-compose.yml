@@ -1,7 +1,7 @@
 services:
   web:
     build: .
-    image: ghcr.io/srgokuto/ejercicio-docker-audit:latest
+    image: ${DOCKERHUB_USERNAME:-srgokuto}/ejercicio-docker-audit:latest
     container_name: tecnova-web
     restart: unless-stopped
     env_file:
