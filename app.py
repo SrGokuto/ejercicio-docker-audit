@@ -1,14 +1,14 @@
 import pymysql
 import random
+import os
 from flask import Flask, request
 
 app = Flask(__name__)
 
-# 🚨 FALLO 1: Credenciales de BD en texto plano (Bandit / Gitleaks)
-DB_HOST = "servidor-bd-ejemplo"
-DB_USER = "root"
-DB_PASS = "admin_adso_2026_secreto"
-DB_NAME = "legacydb"
+DB_HOST = os.getenv("DB_HOST")
+DB_USER = os.getenv("DB_USER")
+DB_PASS = os.getenv("DB_PASS")
+DB_NAME = os.getenv("DB_NAME")
 
 @app.route("/")
 def home():
@@ -22,8 +22,17 @@ def home():
 @app.route("/buscar")
 def buscar_usuario():
     usuario_id = request.args.get("id", "1")
-    query_peligrosa = "SELECT * FROM usuarios WHERE id = " + usuario_id
-    return f"Simulando consulta: {query_peligrosa}"
+    if not usuario_id.isdigit():
+        return "ID inválido", 400
+    try:
+        conn = pymysql.connect(host=DB_HOST, user=DB_USER, password=DB_PASS, database=DB_NAME)
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT * FROM usuarios WHERE id = %s", (usuario_id,))
+            resultado = cursor.fetchall()
+        conn.close()
+        return f"Resultado: {resultado}"
+    except Exception as e:
+        return f"<h1>Sistema Caído</h1><p>{e}</p>", 500
 
 @app.route("/health")
 def health_check():
