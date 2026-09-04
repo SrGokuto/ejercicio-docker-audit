@@ -1,5 +1,5 @@
+import json
 import pymysql
-import random
 import os
 from flask import Flask, request
 
@@ -36,9 +36,18 @@ def buscar_usuario():
 
 @app.route("/health")
 def health_check():
-    if random.random() < 0.3:
-        resultado = 1 / 0 
-    return "OK", 200
+    estado = {"app": "OK", "db": "OK"}
+    status_code = 200
+    try:
+        conn = pymysql.connect(host=DB_HOST, user=DB_USER, password=DB_PASS, database=DB_NAME, connect_timeout=3)
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT 1")
+            cursor.fetchone()
+        conn.close()
+    except Exception as e:
+        estado["db"] = f"ERROR: {e}"
+        status_code = 503
+    return json.dumps(estado), status_code
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5050, debug=True)
