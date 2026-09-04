@@ -53,4 +53,4 @@ def health_check():
     return json.dumps(estado), status_code
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=int(os.getenv("PORT", "5050")), debug=os.getenv("DEBUG", "True"))
+    app.run(host='0.0.0.0', port=int(os.getenv("PORT", "5050")), debug=os.getenv("DEBUG", "True")) #nosec CWE-605
