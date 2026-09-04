@@ -30,6 +30,17 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/ejercicio-docker-audit:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/ejercicio-docker-audit:${{ github.sha }}
 
+      - name: Prepare remote directory
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT || '22' }}
+          script: |
+            mkdir -p /app/ejercicio-docker-audit || sudo -n mkdir -p /app/ejercicio-docker-audit
+            sudo -n chown -R $USER /app/ejercicio-docker-audit 2>/dev/null || true
+
       - name: Copy compose file to server
         uses: appleboy/scp-action@v0.1.7
         with:
