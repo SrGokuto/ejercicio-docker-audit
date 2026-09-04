@@ -65,6 +65,6 @@ jobs:
           script: |
             cd /app/ejercicio-docker-audit
             echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            DOCKERHUB_USERNAME="$DOCKERHUB_USERNAME" docker compose pull web
-            DOCKERHUB_USERNAME="$DOCKERHUB_USERNAME" docker compose up -d --no-build --force-recreate web
+            DOCKERHUB_USERNAME="$DOCKERHUB_USERNAME" docker compose pull
+            DOCKERHUB_USERNAME="$DOCKERHUB_USERNAME" docker compose up -d --no-build --force-recreate
             docker image prune -f
