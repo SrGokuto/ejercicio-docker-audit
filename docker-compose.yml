@@ -48,10 +48,35 @@ services:
       - npm_data:/data
       - npm_letsencrypt:/etc/letsencrypt
 
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: tecnova-uptime
+    restart: unless-stopped
+    networks:
+      - tecnova-net
+    ports:
+      - "3001:3001"
+    volumes:
+      - uptime_kuma_data:/app/data
+
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: tecnova-dozzle
+    restart: unless-stopped
+    networks:
+      - tecnova-net
+    ports:
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - dozzle_data:/data
+
 volumes:
   db_data:
   npm_data:
   npm_letsencrypt:
+  uptime_kuma_data:
+  dozzle_data:
 
 networks:
   tecnova-net:
